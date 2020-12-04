@@ -7,7 +7,17 @@ namespace Advent2020
     {
         protected IEnumerable<string> ReadLines()
         {
-            return File.ReadAllLines(Path.Combine("Inputs", "input" + $"{GetType().Name.Substring(3)}" + ".txt"));
+            return File.ReadAllLines(GetFile());
+        }
+
+        protected string ReadAll()
+        {
+            return File.ReadAllText(GetFile());
+        }
+
+        private string GetFile()
+        {
+            return Path.Combine("Inputs", "input" + $"{GetType().Name.Substring(3)}" + ".txt");
         }
     }
 }
