@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -10,22 +11,50 @@ namespace Advent2020
         public void Task()
         {
             var lines = ReadLines()
-                .Select(l => (Instruction: l, Visited: false))
+                .Select(l =>
+                {
+                    var (operation, arg) = Slice(l);
+                    var argument = int.Parse(arg);
+                    return (Operation: operation, Argument: argument);
+                })
                 .ToArray();
 
-            var accumulator = 0;
-            var index = 0;
-            TryReachBreakpoint(lines, ref index, ref accumulator);
-            Console.WriteLine(accumulator);
+            for (var i = 0; i < lines.Length; i++)
+            {
+                lines[i] = SwitchOperation(lines[i]);
+
+                var accumulator = 0;
+                var index = 0;
+                if (TryReachBreakpoint(lines, ref index, ref accumulator))
+                {
+                    Console.WriteLine(accumulator);
+                    return;
+                }
+
+                lines[i] = SwitchOperation(lines[i]);
+            }
         }
 
-        private bool TryReachBreakpoint((string Instruction, bool Visited)[] lines, ref int index, ref int accumulator)
+        private static (string Operation, int Argument) SwitchOperation((string Operation, int Argument) line)
         {
-            while (!lines[index].Visited)
+            var (operation, argument) = line;
+            operation = operation switch
             {
-                lines[index].Visited = true;
-                var (operation, arg) = Slice(lines[index].Instruction);
-                var argument = int.Parse(arg);
+                "jmp" => "nop",
+                "nop" => "jmp",
+                _ => operation,
+            };
+            return (operation, argument);
+        }
+
+        private bool TryReachBreakpoint((string Operation, int Argument)[] lines, ref int index,
+            ref int accumulator)
+        {
+            var visitedIndexes = new HashSet<int>();
+            while (!visitedIndexes.Contains(index))
+            {
+                visitedIndexes.Add(index);
+                var (operation, argument) = lines[index];
                 switch (operation)
                 {
                     case "acc":
