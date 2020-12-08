@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Advent2020
@@ -18,6 +19,14 @@ namespace Advent2020
         private string GetFile()
         {
             return Path.Combine("Inputs", "input" + $"{GetType().Name.Substring(3)}" + ".txt");
+        }
+
+        public (string, string) Slice(string value)
+        {
+            var parts = value.Split(" ");
+            if (parts.Length != 2)
+                throw new Exception();
+            return (parts[0], parts[1]);
         }
     }
 }
