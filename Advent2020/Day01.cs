@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
 namespace Advent2020
 {
-    public class Day1 : TestBase
+    public class Day01 : TestBase
     {
         [Test]
         public void Task()

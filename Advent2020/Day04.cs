@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Advent2020
 {
-    public class Day4 : TestBase
+    public class Day04 : TestBase
     {
         [Test]
         public void Task()
