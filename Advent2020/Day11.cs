@@ -21,7 +21,7 @@ namespace Advent2020
         public void Example()
         {
             Assert.AreEqual(
-                37,
+                26,
                 Life(new[]
                 {
                     new[] {'L', '.', 'L', 'L', '.', 'L', 'L', '.', 'L', 'L'},
@@ -70,7 +70,7 @@ namespace Advent2020
             return value switch
             {
                 'L' when adjacent.All(c => c != '#') => '#',
-                '#' when adjacent.Count(c => c == '#') >= 4 => 'L',
+                '#' when adjacent.Count(c => c == '#') >= 5 => 'L',
                 _ => value
             };
         }
@@ -82,12 +82,22 @@ namespace Advent2020
             {
                 if (k == 0 && l == 0)
                     continue;
+                var ii =i;
+                var jj = j;
+                do
+                {
+                    ii += k;
+                    jj += l;
+                } while (IndicesValid(grid, ii, jj) && grid[ii][jj] == '.');
 
-                var ii = i + k;
-                var jj = j + l;
-                if (ii >= 0 && ii < grid.Count && jj >= 0 && jj < grid[i].Length)
+                if (IndicesValid(grid, ii, jj))
                     yield return grid[ii][jj];
             }
+        }
+
+        private static bool IndicesValid(IReadOnlyList<char[]> grid, int ii, int jj)
+        {
+            return ii >= 0 && ii < grid.Count && jj >= 0 && jj < grid[ii].Length;
         }
 
         private static string WriteState(IEnumerable<char[]> grid)
