@@ -14,32 +14,32 @@ namespace Advent2020
                 .Select(l => (Direction: l[0], Argument: int.Parse(l.Substring(1))))
                 .ToArray();
             int x = 0, y = 0;
-            var facing = 'E';
+            var waypoint = (X: 1, Y: 10);
             foreach (var (instruction, argument) in instructions)
             {
-                var direction = instruction;
-                if (instruction == 'F')
-                    direction = facing;
-
-                switch (direction)
+                switch (instruction)
                 {
                     case 'N':
-                        x += argument;
+                        waypoint.X += argument;
                         break;
                     case 'E':
-                        y += argument;
+                        waypoint.Y += argument;
                         break;
                     case 'S':
-                        x -= argument;
+                        waypoint.X -= argument;
                         break;
                     case 'W':
-                        y -= argument;
+                        waypoint.Y -= argument;
                         break;
                     case 'L':
-                        facing = RotateShip(facing, argument, -1);
+                        waypoint = RotateWaypoint(waypoint, argument, -1);
                         break;
                     case 'R':
-                        facing = RotateShip(facing, argument, +1);
+                        waypoint = RotateWaypoint(waypoint, argument, +1);
+                        break;
+                    case 'F':
+                        x += argument * waypoint.X;
+                        y += argument * waypoint.Y;
                         break;
                     default:
                         throw new Exception();
@@ -47,6 +47,14 @@ namespace Advent2020
             }
 
             Console.WriteLine(Math.Abs(x) + Math.Abs(y));
+        }
+
+        private static (int X, int Y) RotateWaypoint((int X, int Y) waypoint, int degrees, int sign)
+        {
+            for (var i = 0; i < degrees % 360 / 90; i++)
+                waypoint = (sign * -1 * waypoint.Y, sign * waypoint.X);
+
+            return waypoint;
         }
 
         private static char RotateShip(char direction, int degrees, int sign)
@@ -57,8 +65,7 @@ namespace Advent2020
             var shift = (Circle.IndexOf(direction) + degrees / 90 * sign) % 4;
             if (shift < 0)
                 shift += 4;
-            if (shift < 0 || shift > 3)
-                throw new Exception();
+
             return Circle[shift];
         }
 
