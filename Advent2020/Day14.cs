@@ -16,26 +16,25 @@ namespace Advent2020
                 return (Variable: parts[0], Value: parts[1]);
             });
             var mask = "";
-            var mem = new Dictionary<int, long>();
+            var mem = new Dictionary<long, long>();
             foreach (var (variable, value) in lines)
             {
                 if (variable == "mask")
                     mask = value;
                 else
                 {
-                    var actualValue = ApplyMask(long.Parse(value), mask);
                     var address = variable.Substring(4, variable.Length - 5);
-                    mem[int.Parse(address)] = actualValue;
+                    var val = long.Parse(value);
+                    foreach (var addr in ApplyMask2(int.Parse(address), mask))
+                        mem[addr] = val;
                 }
             }
 
             Console.WriteLine(mem.Values.Sum());
         }
 
-        private static long ApplyMask(long value, string mask)
+        private static long ApplyMask1(long value, string mask)
         {
-            // Console.WriteLine($"Mask: {mask}");
-            // Console.WriteLine($"Value: {Convert.ToString(value, 2)}");
             const long inversion = 0b111111111111111111111111111111111111;
             var power = 1L;
             for (var i = mask.Length - 1; i >= 0; i--)
@@ -53,9 +52,52 @@ namespace Advent2020
                 power *= 2;
             }
 
-
-            // Console.WriteLine($"Result: {Convert.ToString(value, 2)}");
             return value;
+        }
+
+        private static IEnumerable<long> ApplyMask2(int value, string mask)
+        {
+            var power = mask.Count(c => c == 'X');
+            for (var i = 0; i < Math.Pow(2, power); i++)
+            {
+                yield return Combine(value, i, mask);
+            }
+        }
+
+        private static long Combine(long source, int placeholders, string mask)
+        {
+            var result = 0L;
+            for (var i = mask.Length - 1; i >= 0; i--)
+            {
+                result *= 2;
+                if (mask[i] == 'X')
+                {
+                    result += placeholders % 2;
+                    placeholders /= 2;
+                }
+                else
+                {
+                    result += mask[i] == '0' ? (int) source % 2 : 1;
+                }
+
+                source /= 2;
+            }
+
+            result = Reverse(result);
+            return result;
+        }
+
+        private static long Reverse(long value)
+        {
+            var result = 0L;
+            for (var i = 0; i < 36; i++)
+            {
+                result *= 2;
+                result += value % 2;
+                value /= 2;
+            }
+
+            return result;
         }
     }
 }
