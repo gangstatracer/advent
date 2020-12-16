@@ -21,9 +21,9 @@ namespace Advent2020
             return Path.Combine("Inputs", "input" + $"{GetType().Name.Substring(3)}" + ".txt");
         }
 
-        protected static (string, string) Slice(string value)
+        protected static (string, string) Slice(string value, string separator = " ")
         {
-            var parts = value.Split(" ");
+            var parts = value.Split(separator);
             if (parts.Length != 2)
                 throw new Exception();
             return (parts[0], parts[1]);
