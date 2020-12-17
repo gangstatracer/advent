@@ -11,10 +11,10 @@ namespace Advent2020
         public void Task()
         {
             var space = ReadLines()
-                .Select((s, i) => s.Select((c, j) => (X: i, Y: j, Z: 0, Active: c == '#')))
+                .Select((s, i) => s.Select((c, j) => (X: i, Y: j, Active: c == '#')))
                 .SelectMany(t => t)
                 .Where(t => t.Active)
-                .Select(t => (t.X, t.Y, t.Z))
+                .Select(t => (t.X, t.Y, Z: 0, W: 0))
                 .ToHashSet();
 
             for (var i = 0; i < 6; i++)
@@ -22,7 +22,7 @@ namespace Advent2020
             Console.WriteLine(space.Count);
         }
 
-        private static HashSet<(int, int, int)> Life(HashSet<(int, int, int)> active)
+        private static HashSet<(int, int, int, int)> Life(HashSet<(int, int, int, int)> active)
         {
             var activeNeighborsCounts = active
                 .ToDictionary(c => c, c => (active: true, activeNeighbors: 0));
@@ -45,14 +45,15 @@ namespace Advent2020
                 .ToHashSet();
         }
 
-        private static IEnumerable<(int, int, int)> GetNeighbors((int X, int Y, int Z) cell)
+        private static IEnumerable<(int, int, int, int)> GetNeighbors((int X, int Y, int Z, int W) cell)
         {
-            var (x, y, z) = cell;
+            var (x, y, z, w) = cell;
             for (var i = -1; i <= 1; i++)
             for (var j = -1; j <= 1; j++)
             for (var k = -1; k <= 1; k++)
-                if (i != 0 || j != 0 || k != 0)
-                    yield return (x + i, y + j, z + k);
+            for (var l = -1; l <= 1; l++)
+                if (i != 0 || j != 0 || k != 0 || l != 0)
+                    yield return (x + i, y + j, z + k, w + l);
         }
     }
 }
