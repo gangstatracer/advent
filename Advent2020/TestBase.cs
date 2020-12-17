@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Advent2020
 {
-    public class TestBase
+    public class DayTestBase
     {
         protected IEnumerable<string> ReadLines()
         {
