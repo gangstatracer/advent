@@ -79,15 +79,15 @@ namespace Advent2020
             {
                 '(' => -1,
                 '*' => 1,
-                '+' => 1,
+                '+' => 2,
             };
         }
 
-        [TestCase(71, "1 + 2 * 3 + 4 * 5 + 6")]
-        [TestCase(26, "2 * 3 + (4 * 5)")]
-        [TestCase(437, "5 + (8 * 3 + 9 + 3 * 4 * 3)")]
-        [TestCase(12240, "5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))")]
-        [TestCase(13632, "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2")]
+        [TestCase(51, "1 + (2 * 3) + (4 * (5 + 6))")]
+        [TestCase(46, "2 * 3 + (4 * 5)")]
+        [TestCase(1445, "5 + (8 * 3 + 9 + 3 * 4 * 3)")]
+        [TestCase(669060, "5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))")]
+        [TestCase(23340, "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2")]
         public void Example(int expected, string expression)
         {
             Assert.AreEqual(expected, Process(expression));
